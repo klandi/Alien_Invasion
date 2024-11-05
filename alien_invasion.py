@@ -81,15 +81,6 @@ class AlienInvasion:
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
 
         if button_clicked and not self.game_active:
-            # # Reset the game settings
-            # self.settings.initialize_dynamic_settings()
-            # # Reset the game statistics
-            # self.stats.reset_stats()
-            # self.sb.prep_score()
-            # self.sb.prep_level()
-            # self.sb.prep_ships()
-            #
-            # self._start_game()
             self._new_game_reset_start()
 
     def _new_game_reset_start(self):
@@ -118,7 +109,7 @@ class AlienInvasion:
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
         elif event.key == pygame.K_p and not self.game_active:
-            self._start_game()
+            self._new_game_reset_start()
 
     def _start_game(self):
         # Reset the game statistics
