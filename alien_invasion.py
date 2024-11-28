@@ -41,13 +41,10 @@ class AlienInvasion:
         self.laser_sound = pygame.mixer.Sound('assets/sounds/Laser Gun.wav')
 
         self._create_fleet()
-
         # Start Alien Invasion in an inactive state
         self.game_active = False
-
         # Make play button
         self.play_button = Button(self, "Play")
-
 
     def run_game(self):
         """Start the main loop for the game."""
