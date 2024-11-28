@@ -27,7 +27,7 @@ class AlienInvasion:
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
         # self.bg_image = pygame.image.load('images/earth.bmp')
-        self.bg_image = pygame.image.load('images/stars_bg.bmp')
+        self.bg_image = pygame.image.load(f'assets/bgs/stars_bg.jpg')
         pygame.display.set_caption("Alien Invasion")
 
         # Create an instance to store game statistics and create a scoreboard
@@ -39,6 +39,8 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.stars = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
+
+        self.laser_sound = pygame.mixer.Sound('assets/sounds/Laser Gun.wav')
 
         self._create_stars()
         self._create_fleet()
@@ -145,6 +147,7 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+            self.laser_sound.play()
 
     def _update_bullets(self):
         """Update position of bullets and get rid of old bullets"""
@@ -286,13 +289,11 @@ class AlienInvasion:
         # The line below paints the background with the color selected in Settings
         self.screen.fill(self.settings.bg_color)
         # The line below will replace the background with the image selected in bg_image
-        # self.screen.blit(self.bg_image, self.bg_image.get_rect())
-        # self.stars.draw(self.screen)
+        self.screen.blit(self.bg_image, (0, 0))
 
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.ship.blitme()
-        # self.ship_2.blitme()
         self.aliens.draw(self.screen)
 
         # Draw the score information
