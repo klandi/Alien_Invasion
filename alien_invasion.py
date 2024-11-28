@@ -11,7 +11,6 @@ from ship import Ship
 from ship_2 import Ship_2
 from bullet import Bullet
 from alien import Alien
-from star import Star
 
 
 class AlienInvasion:
@@ -26,7 +25,6 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
-        # self.bg_image = pygame.image.load('images/earth.bmp')
         self.bg_image = pygame.image.load(f'assets/bgs/stars_bg.jpg')
         pygame.display.set_caption("Alien Invasion")
 
@@ -42,7 +40,6 @@ class AlienInvasion:
 
         self.laser_sound = pygame.mixer.Sound('assets/sounds/Laser Gun.wav')
 
-        self._create_stars()
         self._create_fleet()
 
         # Start Alien Invasion in an inactive state
@@ -131,6 +128,11 @@ class AlienInvasion:
         # Hide the mouse cursor
         pygame.mouse.set_visible(False)
 
+        pygame.mixer.init()
+        pygame.mixer.music.load('assets/sounds/space-120280.mp3')
+        pygame.mixer.music.set_volume(.2)
+        pygame.mixer.music.play()
+
     def _check_keyup_events(self, event):
         """Response to key releases"""
         if event.key == pygame.K_RIGHT:
@@ -158,7 +160,6 @@ class AlienInvasion:
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
-        # print(len(self.bullets))
 
         self._check_bullet_alien_collisions()
 
@@ -199,11 +200,15 @@ class AlienInvasion:
             self._create_fleet()
             self.ship.center_ship()
 
+            pygame.mixer.music.stop()
+
             # Pause
             sleep(0.5)
+            pygame.mixer.music.play()
         else:
             self.game_active = False
             pygame.mouse.set_visible(True)
+            pygame.mixer.music.stop()
 
     def _update_aliens(self):
         """Update the positions of all aliens in the fleet"""
@@ -255,20 +260,6 @@ class AlienInvasion:
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
 
-    def _create_stars(self):
-        star = Star(self)
-        star_width, star_height = star.rect.size
-
-        current_x, current_y = star_width, star_height
-        # current_x, current_y = 10, 10
-        while current_y < self.settings.screen_height:
-            while current_x < self.settings.screen_width:
-                self._create_star(current_x, current_y)
-                current_x += star_width
-
-            current_x = star_width
-            current_y += star_height
-
     def _create_alien(self, x_position, y_position):
         """Create an alien and place it in the row"""
         new_alien = Alien(self)
@@ -276,13 +267,6 @@ class AlienInvasion:
         new_alien.rect.x = x_position
         new_alien.rect.y = y_position
         self.aliens.add(new_alien)
-
-    def _create_star(self, x_position, y_position):
-        new_star = Star(self)
-        new_star.x = x_position
-        new_star.rect.x = x_position
-        new_star.rect.y = y_position
-        self.stars.add(new_star)
 
     def _update_screen(self):
         """Update images on the screen. and flip to the new screen."""
